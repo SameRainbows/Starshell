@@ -1,38 +1,19 @@
 import turtle
 import math
 
-t = turtle.Turtle()
-plt = turtle.Turtle()
-k = turtle.Turtle()
+t = turtle.Turtle() 
 t.screen.setup(700,700)
-
 screen = t.screen
 objs = []
 
 t.shape("circle")
-t.shapesize(2,2)
+t.shapesize(4,4)
 t.speed(0) # 1:slowest, 3:slow, 5:normal, 10:fast, 0:fastest
 t.pu()
 
 objs.append([t, 100, 0, 0])
 
-plt.shape("circle")
-plt.color("blue")
-plt.shapesize(1,1)
-plt.speed(0) # 1:slowest, 3:slow, 5:normal, 10:fast, 0:fastest
-plt.pu()
-objs.append([plt, 1, 26, -5])
-plt.goto(100,100)
 
-plt.pd()
-
-k.shape("circle")
-k.color("yellow")
-k.shapesize(1,1)
-k.speed(0) # 1:slowest, 3:slow, 5:normal, 10:fast, 0:fastest
-k.pu()
-objs.append([k, 1, 26, -5])
-k.goto(-100,140)
 
 G = 1000
 def distance(t1, t2): # t1.distance(t2)
@@ -96,14 +77,45 @@ def move():
     obj2[0].goto(x + vx, y + vy)
     screen.ontimer(move, t=1)"""
 
+canvas = screen.getcanvas()
+press_x = None
+press_y = None
+
+
+sling_state = None
+def sling(event):
+    global sling_state
+    global press_x
+    global press_y
+
+    if sling_state == None:
+        press_x = event.x - 350 
+        press_y = 350 - event.y
+        sling_state = press_x, press_y
+    else:
+        release_x = event.x - 350 
+        release_y = 350 - event.y
+        sling_state = None
+        vx = press_x - release_x
+        vy = press_y - release_y
+        new_body = turtle.Turtle()
+        new_body.shapesize(1,1)
+        new_body.color("orange")
+        new_body.shape('circle')
+        new_body.speed(0)
+        new_body.penup()
+        new_body.goto(press_x, press_y)
+        objs.append([new_body, 1, vx, vy])
+        
+
+    
+
+canvas.bind("<ButtonPress-1>", sling)
+canvas.bind("<ButtonRelease-1>", sling)
 
 
 
-print(objs)
 
-print(force(objs[0], objs[1]))
-
-print(direction(objs[1], objs[0]))
 
 move()
 

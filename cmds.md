@@ -143,7 +143,7 @@ Common key names: `"space"`, `"Up"`, `"Down"`, `"Left"`, `"Right"`, `"Return"`, 
 ---
 
 ## 9. The Game Loop — `ontimer()`
-
+sc
 | Command | What it does |
 |---|---|
 | `screen.ontimer(function, t)` | Call `function` after `t` milliseconds |
