@@ -1,4 +1,4 @@
-# Starshell — Python Turtle Reference
+# orbital — Python Turtle Reference
 
 A curated reference of `turtle` module features relevant to building a physics simulator.
 

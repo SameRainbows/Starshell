@@ -1,10 +1,10 @@
-# Starshell 
+# orbital 
 
 A 2D astronomical physics simulator built entirely in Python Turtle — no external libraries.
 
 ## What it does
 
-Starshell simulates gravitational interactions between bodies in 2D space. A planet orbits a central star, with its path determined by real physics: gravitational force, acceleration, and velocity — computed from scratch each frame.
+orbital simulates gravitational interactions between bodies in 2D space. A planet orbits a central star, with its path determined by real physics: gravitational force, acceleration, and velocity — computed from scratch each frame.
 
 ## How the physics works
 
