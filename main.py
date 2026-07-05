@@ -9,6 +9,51 @@ screen.bgcolor('black')
 objs = []
 # structure: [turtle, mass, vx, vy, x, y, old_x, old_y, radius]
 
+canvas = screen.getcanvas()
+
+counter = 0
+def color_fun():
+    global counter
+    global new_body_color
+   
+    colors = ['red', 'green', 'blue', 'yellow', 'orange', 'white', 'pink']
+    new_body_color = colors[counter]
+    color_button['text']=f'{new_body_color}'
+
+    counter += 1
+    if counter == len(colors):
+        counter = 0
+
+def reset():
+    for i in range(len(objs)):
+        objs[i][0].hideturtle()
+    objs.clear()
+    global cam_x
+    global cam_y
+    cam_x = 0
+    cam_y = 0
+    p = turtle.Turtle()
+    p.shape("circle")
+    p.shapesize(2,2)
+    p.speed(0) # 1:slowest, 3:slow, 5:normal, 10:fast, 0:fastest
+    p.pu()
+    p.color('white')
+    objs.append([p, 100, 0, 0, 0, 0, 0, 0, 20])
+    
+
+color_button = tkinter.Button(screen._root, text="Color cycle", command=color_fun)
+reset_button = tkinter.Button(screen._root, text='Reset', command=reset)
+
+G_slider = tkinter.Scale(screen._root,label='Gravity', from_=100, to=1000, orient="horizontal")
+Mass_slider = tkinter.Scale(screen._root,label='Mass', from_=1, to=100, orient="horizontal")
+
+canvas.create_window(295,-330, window=reset_button)
+canvas.create_window(295,-300, window=color_button)
+canvas.create_window(290,-255, window=G_slider)
+canvas.create_window(290,-192, window=Mass_slider)
+
+
+
 cam_x = 0
 cam_y = 0
 
@@ -17,13 +62,13 @@ t.shape("circle")
 t.shapesize(2,2)
 t.speed(0) # 1:slowest, 3:slow, 5:normal, 10:fast, 0:fastest
 t.pu()
-t.color('yellow')
+t.color('white')
 
 objs.append([t, 100, 0, 0, 0, 0, 0, 0, 20])
 
 
 
-G = 900 # 100-1000 works best!
+G = None # 100-1000 works best!
 def distance(obj1, obj2): # r = √((x₂−x₁)² + (y₂−y₁)²)
     return math.sqrt((obj2[4]-obj1[4]) ** 2 + (obj2[5] - obj1[5]) ** 2)
 
@@ -85,21 +130,7 @@ def passed_through(body, other):
     else:
         return False
 
-canvas = screen.getcanvas()
-# A simple test function
-counter = 0
-def color_b():
-    global counter
-    global new_body_color
-   
-    colors = ['red', 'green', 'blue', 'yellow', 'orange', 'white', 'pink']
-    new_body_color = colors[counter]
-    print(f'The current color is: {new_body_color}')
-    my_button['text']=f'{new_body_color}'
 
-    counter += 1
-    if counter == len(colors):
-        counter = 0
 
 def merge(obj1, obj2):
     global objs
@@ -145,6 +176,8 @@ def merge_collisions():
 
 def move():
     global objs
+    global G
+    G = G_slider.get()
     merge_collisions() # Check merges with already touching objects
     for body in objs:
         for other in objs:
@@ -171,19 +204,14 @@ def move():
 
 
 
-# Syntax scaffold - creating a button
-my_button = tkinter.Button(screen._root, text="Color cycle", command=color_b)
 
-# Syntax scaffold - creating a slider
-my_slider = tkinter.Scale(screen._root, from_=1, to=100, orient="horizontal")
-# Syntax scaffold - placing a widget on a canvas
-canvas.create_window(315,-340, window=my_button)
+
 
 
 press_x = None
 press_y = None
 
-new_body_color = 'orange'
+new_body_color = 'white'
 sling_state = None
 def sling(event):
     global sling_state
@@ -209,7 +237,7 @@ def sling(event):
         new_body.speed(0)
         new_body.penup()
         new_body.goto(press_x - cam_x, press_y - cam_y)
-        objs.append([new_body, 10, vx, vy, press_x, press_y, press_x, press_y, 10])
+        objs.append([new_body, Mass_slider.get(), vx, vy, press_x, press_y, press_x, press_y, 10])
         
 def w():
     global cam_y
