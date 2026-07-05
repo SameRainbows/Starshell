@@ -1,0 +1,68 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Triggers on tags starting with v, e.g. v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Tkinter dependency (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk
+
+      - name: Install PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Build Executable
+        run: |
+          pyinstaller --onefile --noconsole --name Orbital main.py
+
+      - name: Rename binaries for distinct platforms (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          Rename-Item -Path "dist/Orbital.exe" -NewName "Orbital-Windows.exe"
+
+      - name: Rename binaries for distinct platforms (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          mv dist/Orbital dist/Orbital-macOS
+
+      - name: Rename binaries for distinct platforms (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mv dist/Orbital dist/Orbital-Linux
+
+      - name: Upload Release Binaries
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/Orbital-Windows.exe
+            dist/Orbital-macOS
+            dist/Orbital-Linux
+          fail_on_unsupported_ghost_images: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

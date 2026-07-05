@@ -1,5 +1,6 @@
 import turtle
 import math
+import tkinter
 
 t = turtle.Turtle() 
 t.screen.setup(700,700)
@@ -84,6 +85,22 @@ def passed_through(body, other):
     else:
         return False
 
+canvas = screen.getcanvas()
+# A simple test function
+counter = 0
+def color_b():
+    global counter
+    global new_body_color
+   
+    colors = ['red', 'green', 'blue', 'yellow', 'orange', 'white', 'pink']
+    new_body_color = colors[counter]
+    print(f'The current color is: {new_body_color}')
+    my_button['text']=f'{new_body_color}'
+
+    counter += 1
+    if counter == len(colors):
+        counter = 0
+
 def merge(obj1, obj2):
     global objs
     new_m = obj1[1] + obj2[1] # mass of the merged object
@@ -103,7 +120,7 @@ def merge(obj1, obj2):
     new_body.pu()
     new_body.shapesize(shape_size, shape_size)
     new_body.shape('circle')
-    new_body.color('yellow')
+    new_body.color(new_body_color)
     new_body.speed(0)
     obj1[0].hideturtle() # Hide merging turtles and replace them with new_body
     obj2[0].hideturtle()
@@ -148,14 +165,25 @@ def move():
         body[0].goto(body[4] - cam_x, body[5] - cam_y)
 
     merge_collisions() # Check again after moving a frame
-    screen.ontimer(move, t=5) # Set to 1 for maximum frames set to 2 or higher for more chunky but less compute intensive simulations
+    screen.ontimer(move, t=1) # Set to 1 for maximum frames set to 2 or higher for more chunky but less compute intensive simulations
     
 
-canvas = screen.getcanvas()
+
+
+
+# Syntax scaffold - creating a button
+my_button = tkinter.Button(screen._root, text="Color cycle", command=color_b)
+
+# Syntax scaffold - creating a slider
+my_slider = tkinter.Scale(screen._root, from_=1, to=100, orient="horizontal")
+# Syntax scaffold - placing a widget on a canvas
+canvas.create_window(315,-340, window=my_button)
+
+
 press_x = None
 press_y = None
 
-
+new_body_color = 'orange'
 sling_state = None
 def sling(event):
     global sling_state
@@ -176,24 +204,28 @@ def sling(event):
         vy = press_y - release_y
         new_body = turtle.Turtle()
         new_body.shapesize(1,1)
-        new_body.color("white")
+        new_body.color(new_body_color)
         new_body.shape('circle')
         new_body.speed(0)
         new_body.penup()
         new_body.goto(press_x - cam_x, press_y - cam_y)
-        objs.append([new_body, 1, vx, vy, press_x, press_y, press_x, press_y, 10])
+        objs.append([new_body, 10, vx, vy, press_x, press_y, press_x, press_y, 10])
         
 def w():
     global cam_y
     cam_y += 10
+    cam_y += 10
 def a():
     global cam_x
+    cam_x -= 10
     cam_x -= 10
 def s():
     global cam_y
     cam_y -= 10
+    cam_y -= 10
 def d():
     global cam_x
+    cam_x += 10
     cam_x += 10
 
 canvas.bind("<ButtonPress-1>", sling)
