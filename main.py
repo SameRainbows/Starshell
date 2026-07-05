@@ -47,10 +47,20 @@ reset_button = tkinter.Button(screen._root, text='Reset', command=reset)
 G_slider = tkinter.Scale(screen._root,label='Gravity', from_=100, to=1000, orient="horizontal")
 Mass_slider = tkinter.Scale(screen._root,label='Mass', from_=1, to=100, orient="horizontal")
 
-canvas.create_window(295,-330, window=reset_button)
-canvas.create_window(295,-300, window=color_button)
-canvas.create_window(290,-255, window=G_slider)
-canvas.create_window(290,-192, window=Mass_slider)
+reset_id = canvas.create_window(295,-330, window=reset_button)
+color_id = canvas.create_window(295,-300, window=color_button)
+g_slider_id = canvas.create_window(290,-255, window=G_slider)
+mass_slider_id = canvas.create_window(290,-192, window=Mass_slider)
+
+def resize(event):
+    whw = canvas.winfo_width() / 2
+    whh = canvas.winfo_height() / 2
+    x = event.x
+    canvas.coords(reset_id, whw - 55, -whh + 20)
+    canvas.coords(color_id, whw - 55,  -whh + 50)
+    canvas.coords(g_slider_id, whw - 60,  -whh + 95)
+    canvas.coords(mass_slider_id, whw - 60,  -whh + 158)
+canvas.bind("<Configure>", resize)
 
 
 
@@ -217,6 +227,7 @@ def sling(event):
     global sling_state
     global press_x
     global press_y
+
     scww = canvas.winfo_width() / 2
     scwh = canvas.winfo_height() / 2
 
