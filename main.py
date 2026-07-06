@@ -16,7 +16,7 @@ def color_fun():
     global counter
     global new_body_color
    
-    colors = ['red', 'green', 'blue', 'yellow', 'orange', 'white', 'pink']
+    colors = ['Red', 'Green', 'Blue', 'Yellow', 'Orange', 'White']
     new_body_color = colors[counter]
     color_button['text']=f'{new_body_color}'
 
@@ -41,11 +41,11 @@ def reset():
     objs.append([p, 100, 0, 0, 0, 0, 0, 0, 20])
     
 
-color_button = tkinter.Button(screen._root, text="Color cycle", command=color_fun)
-reset_button = tkinter.Button(screen._root, text='Reset', command=reset)
+color_button = tkinter.Button(screen._root, bg='#2b2b2b',fg='white', text="Color cycle", command=color_fun)
+reset_button = tkinter.Button(screen._root, bg='#2b2b2b',fg='white', text='Reset', command=reset)
 
-G_slider = tkinter.Scale(screen._root,label='Gravity', from_=100, to=1000, orient="horizontal")
-Mass_slider = tkinter.Scale(screen._root,label='Mass', from_=1, to=100, orient="horizontal")
+G_slider = tkinter.Scale(screen._root,bg='#2b2b2b',fg='white',troughcolor='#4f4f4f',activebackground='#4f4f4f', label='Gravity', from_=100, to=1000, orient="horizontal")
+Mass_slider = tkinter.Scale(screen._root,bg='#2b2b2b',fg='white',troughcolor='#4f4f4f',activebackground='#4f4f4f', label='Spawn Mass', from_=1, to=100, orient="horizontal")
 
 reset_id = canvas.create_window(295,-330, window=reset_button)
 color_id = canvas.create_window(295,-300, window=color_button)
