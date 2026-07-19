@@ -38,7 +38,7 @@ jobs:
 
       - name: Build Executable
         run: |
-          pyinstaller --onefile --noconsole --name Orbital from_scratch.py
+          pyinstaller --onefile --noconsole --name Orbital orbital.py
 
       - name: Rename binaries for distinct platforms (Windows)
         if: matrix.os == 'windows-latest'
